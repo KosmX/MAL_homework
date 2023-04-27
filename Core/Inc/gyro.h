@@ -4,9 +4,14 @@
 
 #ifndef MAL_HOMEWORK_GYRO_H
 #define MAL_HOMEWORK_GYRO_H
+#include "main.h"
 
-const char GYRO_ADDR = 0b1101010; // TODO LSB to SDO *value*
+const char GYRO_ADDR = 0b1101011 << 1;
 
 bool init_gyro();
+
+
+bool read_gyro(int16_t *data);
+
 
 #endif //MAL_HOMEWORK_GYRO_H

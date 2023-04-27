@@ -18,15 +18,15 @@ extern "C" {
 
 //void SHR_write(uint8_t *data[6]); // this is internal stuff
 
-struct LED {
-    bool r: 1;
-    bool g: 1;
-    bool b: 1;
-};
-
 
 #ifdef __cplusplus
 }
+
+struct LED {
+    bool r: 1 = false;
+    bool g: 1 = false;
+    bool b: 1 = false;
+};
 
 union SHR_data {
 public:
@@ -80,7 +80,7 @@ public:
         bool LED0_G: 1 = false;
         bool LED0_B: 1 = false;
     } LEDs;
-    uint8_t data[6];
+    uint8_t data[6]{};
 
 
     void setLEDs(LED *values);

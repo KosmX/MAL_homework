@@ -23,7 +23,7 @@ void SHR_write(SHR_data& data) {
     if (&data != &staticWriteData) {
         staticWriteData = data;
     }
-    SHR_write(reinterpret_cast<uint8_t*>(&staticWriteData));
+    SHR_write(staticWriteData.data);
 }
 
 void SHR_write(LED *leds) {
