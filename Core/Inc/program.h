@@ -14,6 +14,8 @@ extern "C" {
 
     void loop();
 
+    void tick(); // 100Hz ticking by timer.
+
 
 #ifdef __cplusplus
 }

@@ -26,6 +26,7 @@ void init() {
 
     TIM3->CCR3 = 250;
     HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
+    HAL_TIM_Base_Start_IT(&htim2);
 }
 
 void loop() {
@@ -41,7 +42,9 @@ void loop() {
         if (idx == 16) {
             idx = 0;
         }//*/
-        int len = static_cast<int>(sqrt(gyro_data[0] * gyro_data[0] + gyro_data[1] * gyro_data[1] + gyro_data[2] * gyro_data[2]) / 512);
+        //int len = static_cast<int>(sqrt(gyro_data[0] * gyro_data[0] + gyro_data[1] * gyro_data[1] + gyro_data[2] * gyro_data[2]) / 64);
+        int normal_dir = gyro_data[0] + gyro_data[1]; // positive direction: towards the power supply
+        int len = std::abs(normal_dir / 64);
 
         for(auto& led : leds) {
             led = {}; // now LED has a default (turned off) constructor
@@ -68,10 +71,21 @@ void loop() {
         } else {
             TIM3->CCR3 = 250;
         }
+        HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
     }
 
-    HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
 
+}
+
+void tick() {
+
+    it = read_gyro(gyro_data);
+}
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+    if (htim == &htim2) {
+        tick();
+    }
 }
 
 
