@@ -5,10 +5,11 @@
 #include "filter_math.h"
 
 float LPF::sample(float x) {
-
     return y = alpha * x + (1 - alpha) * y;
 }
 
 float HPF::sample(float x) {
-    TODO();
+    y = alpha * y + alpha * (x - x_1);
+    x_1 = x;
+    return y;
 }

@@ -20,6 +20,8 @@ class HPF {
     float alpha = 0.01;
     float y = 0;
     float sample(float x);
+private:
+    float x_1 = 0;
 };
 
 #endif
