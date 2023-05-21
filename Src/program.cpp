@@ -6,70 +6,50 @@
 #include "program.h"
 #include "main.h"
 #include "shr.h"
-#include "gyro.h"
+#include "accmu.h"
 #include "tim.h"
 #include "GPIO_manager.h"
+#include "graphics.h"
 
 GPIO_manager button{B1_GPIO_Port, B1_Pin, true};
 
 
-LED leds[16] = {};
+std::vector<LED> leds{16};
 int idx = 0;
 
 volatile bool it = false;
 int16_t gyro_data[3] = {0};
 
+Graphics drawer{};
+
 void init() {
     // reset LED states. (call the DMA)
-    SHR_write(leds);
-    init_gyro();
+    SHR_write(leds.data());
+
+    init_accmu();
 
     TIM3->CCR3 = 250;
     HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
     HAL_TIM_Base_Start_IT(&htim2);
 }
 
+
 void loop() {
     //HAL_Delay(100); // busy-wait 100 ms
     if (it && HAL_GPIO_ReadPin(SHR_LE_GPIO_Port, SHR_LE_Pin) == GPIO_PinState::GPIO_PIN_SET) {
-        /*
-        leds[idx].r = !leds[idx].r;
-        leds[15 - idx].b = !leds[15 - idx].b;
-
-        SHR_write(leds);
-
-        idx++;
-        if (idx == 16) {
-            idx = 0;
-        }//*/
-        //int len = static_cast<int>(sqrt(gyro_data[0] * gyro_data[0] + gyro_data[1] * gyro_data[1] + gyro_data[2] * gyro_data[2]) / 64);
         int normal_dir = gyro_data[0] + gyro_data[1]; // positive direction: towards the power supply
-        int len = std::abs(normal_dir / 64);
+        //int len = std::abs(normal_dir/8);
+        drawer.update(normal_dir, leds);
 
-        for(auto& led : leds) {
-            led = {}; // now LED has a default (turned off) constructor
-        }
-
-
-        for (int i = 0; i < std::min(len, 16); i++) {
-            leds[i].r = true;
-        }
-        for (int i = 0; i < std::min(len - 16, 16); i++) {
-            leds[i].g = true;
-        }
-        for (int i = 0; i < std::min(len - 32, 16); i++) {
-            leds[i].b = true;
-        }
-
-        SHR_write(leds);
         it = false;
     }
 
+    // button brightness control :D
     if (button.falling_edge()) {
         if (TIM3->CCR3 == 250) {
             TIM3->CCR3 = 0;
         } else {
-            TIM3->CCR3 = 250;
+            TIM3->CCR3 = 250; // 2.4% brightness
         }
         HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
     }
@@ -79,7 +59,7 @@ void loop() {
 
 void tick() {
 
-    it = read_gyro(gyro_data);
+    it = read_accmu(gyro_data);
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
@@ -91,7 +71,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
     if (GPIO_Pin == DRDY_IT_Pin) {
-        it = read_gyro(gyro_data);
+        it = read_accmu(gyro_data);
 
         /*
         if (it) {
