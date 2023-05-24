@@ -9,7 +9,7 @@
 #include <functional>
 #include "ProtoThreadWrapper.h"
 
-// i am sorry, I have to show-off threading
+// I am sorry, I have to show-off threading
 template<typename R>
 class Sequence {
 public:

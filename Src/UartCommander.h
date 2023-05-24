@@ -33,15 +33,17 @@ public:
      */
     UartCommand* newData(uint8_t byte);
 private:
-    ProtoThreadWrapper<4096> readerThread {};
+    ProtoThreadWrapper<4096> readerThread {}; /* this is nothing :D */
 
     void readStream();
 
     /**
-     * Wait for next byte
-     * @return
+     * Non-blocking read next byte (the scheduler is hidden somewhere else ;)
+     * @return byte from UART
      */
     uint8_t next_byte();
+
+    void readProgram();
 
 };
 

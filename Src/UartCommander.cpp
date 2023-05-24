@@ -2,6 +2,7 @@
 // Created by kosmx on 2023-05-24.
 //
 
+#include <string>
 #include "UartCommander.h"
 #include "usart.h"
 
@@ -23,11 +24,26 @@ uint8_t UartCommander::next_byte() {
     return reinterpret_cast<std::uintptr_t>(readerThread.suspend(nullptr));
 }
 
+void UART_send_string(std::string str) {
+    HAL_UART_Transmit(&huart2, reinterpret_cast<const uint8_t *>(str.data()), str.size(), 1000);
+}
+
+/** This function will be invoked to interpret data
+ * Calling next_byte() will wait non-blocking until byte is received
+ */
 void UartCommander::readStream() {
-    uint8_t d[3];
-    d[0] = next_byte();
-    d[1] = next_byte();
-    d[2] = '\n';
-    HAL_UART_Transmit(&huart2, d, 3, HAL_MAX_DELAY);
+    char nextCommand = next_byte();
+    switch (nextCommand) {
+        case 'g':
+            UART_send_string("Command parser operational :D\n");
+            break;
+        case 'p': // programming
+            readStream();
+            break;
+    }
+}
+
+void UartCommander::readProgram() {
+
 }
 
