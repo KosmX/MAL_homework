@@ -6,6 +6,7 @@
 #include <vector>
 #include <cmath>
 #include "graphics.h"
+#include "IDrawer.h"
 #include "shr.h"
 
 
@@ -15,7 +16,7 @@ Graphics::Graphics() {
 }
 
 // prints from 0 to 48
-void printAbs(float u, std::vector<LED>& leds) {
+void printAbs(float u, led_array& leds) {
     int x = static_cast<int>(std::abs(u));
 
     for(auto& led : leds) {
@@ -33,7 +34,7 @@ void printAbs(float u, std::vector<LED>& leds) {
     }
 }
 
-void Graphics::update(float acceleration, std::vector<LED>& leds) {
+void Graphics::update(float acceleration, led_array& leds) {
     auto x = inputHPF(acceleration);
 
     // ----- CONTROL LOGIC -----

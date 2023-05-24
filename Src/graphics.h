@@ -23,7 +23,7 @@ class Graphics {
 public:
     Graphics();
 
-    void update(float acceleration, std::vector<LED>& leds);
+    void update(float acceleration, led_array& leds);
 
     IDrawer* drawLogic = nullptr;
 private:

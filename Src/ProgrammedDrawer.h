@@ -5,14 +5,16 @@
 #ifndef MAL_HOMEWORK_PROGRAMMEDDRAWER_H
 #define MAL_HOMEWORK_PROGRAMMEDDRAWER_H
 
+#include <vector>
 #include "IDrawer.h"
 
 class ProgrammedDrawer : IDrawer {
 public:
-    std::vector<std::pair<float, std::vector<LED>>> data;
+    std::vector<std::pair<float, led_array>> data;
 
-    void setLEDs(float location, std::vector<LED> &leds) override;
+    void setLEDs(float location, led_array &leds) override;
     // TODO create constructor from binary data
+
 };
 
 #endif //MAL_HOMEWORK_PROGRAMMEDDRAWER_H

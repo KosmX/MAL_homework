@@ -4,7 +4,7 @@
 
 #include "ProgrammedDrawer.h"
 
-void ProgrammedDrawer::setLEDs(float location, std::vector<LED> &leds) {
+void ProgrammedDrawer::setLEDs(float location, led_array &leds) {
     //search in the data array
     int i = 0;
     while (data[i].first > location && data.size() > i + 1) {i++;}
