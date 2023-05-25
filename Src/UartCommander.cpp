@@ -5,9 +5,11 @@
 #include <string>
 #include "UartCommander.h"
 #include "usart.h"
+#include "IDrawer.h"
+#include "ProgrammedDrawer.h"
 
-UartCommand *UartCommander::newData(uint8_t byte) {
-    auto cmd = reinterpret_cast<UartCommand*>(readerThread.call(reinterpret_cast<void*>(byte))); // This call sends data and maybe receive something useful
+IDrawer *UartCommander::newData(uint8_t byte) {
+    auto cmd = reinterpret_cast<IDrawer*>(readerThread.call(reinterpret_cast<void*>(byte))); // This call sends data and maybe receive something useful
     return cmd;
 }
 
@@ -21,7 +23,9 @@ void UartCommander::init() {
 }
 
 uint8_t UartCommander::next_byte() {
-    return reinterpret_cast<std::uintptr_t>(readerThread.suspend(nullptr));
+    auto b = reinterpret_cast<std::uintptr_t>(readerThread.suspend(sendStuff));
+    sendStuff = nullptr;
+    return b;
 }
 
 void UART_send_string(std::string str) {
@@ -38,12 +42,28 @@ void UartCommander::readStream() {
             UART_send_string("Command parser operational :D\n");
             break;
         case 'p': // programming
-            readStream();
+            readProgram();
             break;
     }
 }
 
 void UartCommander::readProgram() {
+
+    uint8_t data_size = next_byte();
+    std::vector<std::pair<float, led_array>> data {data_size};
+    for (int i = 0; i < data_size; i++) {
+        uint32_t fl = 0;
+        fl |= next_byte();
+        fl |= next_byte() << 8;
+        fl |= next_byte() << 16;
+        fl |= next_byte() << 24;
+        data[i].first = *reinterpret_cast<float*>(&fl);
+        for(auto& led : data[i].second) {
+            led = next_byte();
+        }
+    }
+    // this will be sent to another thread
+    sendStuff = new ProgrammedDrawer(std::move(data));
 
 }
 

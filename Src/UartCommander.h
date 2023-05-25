@@ -8,6 +8,7 @@
 
 #include <cstdint>
 #include "ProtoThreadWrapper.h"
+#include "IDrawer.h"
 
 class UartCommand {
 public:
@@ -31,7 +32,7 @@ public:
      * @param byte byte
      * @return Command to execute or nullptr if not yet full
      */
-    UartCommand* newData(uint8_t byte);
+    IDrawer* newData(uint8_t byte);
 private:
     ProtoThreadWrapper<4096> readerThread {}; /* this is nothing :D */
 
@@ -44,7 +45,7 @@ private:
     uint8_t next_byte();
 
     void readProgram();
-
+    void* sendStuff = nullptr;
 };
 
 

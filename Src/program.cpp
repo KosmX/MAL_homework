@@ -11,7 +11,6 @@
 #include "tim.h"
 #include "GPIO_manager.h"
 #include "graphics.h"
-#include "ProgrammedDrawer.h"
 #include "Uart_async.h"
 #include "UartCommander.h"
 
@@ -26,9 +25,6 @@ int16_t gyro_data[3] = {0};
 
 Graphics drawer{};
 
-
-// one will be filled/overwritten by UART, other will be active
-ProgrammedDrawer drawer1{}, drawer2{}, *activeDrawer = &drawer1;
 
 AsyncUartReceiver& uartReceiver = AsyncUartInstance;
 UartCommander commandTool{};
@@ -69,7 +65,11 @@ void loop() {
 
         {
             while (uartReceiver.isNotEmpty()) {
-                commandTool.newData(uartReceiver.read());
+                 IDrawer* drawData = commandTool.newData(uartReceiver.read());
+                 if (drawData != nullptr) {
+                     delete drawer.drawLogic; // don't forget to use delete or face memory leak...
+                     drawer.drawLogic = drawData;
+                 }
             }
         }
 

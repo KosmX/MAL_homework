@@ -82,3 +82,9 @@ void SHR_data::setLEDs(LED *values) {
         }
     }
 }
+
+LED::LED(uint8_t i) {
+    r = i & 1 << 0;
+    g = i & 1 << 1;
+    b = i & 1 << 2;
+}

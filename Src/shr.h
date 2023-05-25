@@ -23,6 +23,9 @@ extern "C" {
 }
 
 struct LED {
+    LED(bool r = false, bool g = false, bool b = false): r{r}, g{g}, b{b} {};
+    explicit LED(uint8_t i);
+
     bool r: 1 = false;
     bool g: 1 = false;
     bool b: 1 = false;

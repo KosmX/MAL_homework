@@ -1,6 +1,10 @@
 //
 // Created by kosmx on 2023-05-24.
 //
+/**
+ * low-level thread switching functions.
+ * As an example usage, see ProtoThreadWrapper class.
+ */
 
 #ifndef MAL_HOMEWORK_CTX_SWITCH_H
 #define MAL_HOMEWORK_CTX_SWITCH_H
@@ -33,6 +37,7 @@ void* start_thread(void* targetStack, void** sourceStack, void (*entry)(void* da
  * @param oldStack it should be set back to its initial value. If not, an error has happened somewhere
  * @param data has anything to give back?
  */
+[[noreturn]]
 void exit_thread(void* targetStack, void** oldStack, void* data);
 
 #ifdef __cplusplus

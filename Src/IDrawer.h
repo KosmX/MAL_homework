@@ -20,6 +20,8 @@ public:
      // LED array is 2.6666666667 times more data than SHR_data, but it way easier to handle.
      // my program isn't memory limited (128K ram MCU), so having garbage data is okay..
     virtual void setLEDs(float location, led_array& leds) = 0;
+
+    virtual ~IDrawer() = default;
 };
 
 #endif //MAL_HOMEWORK_IDRAWER_H
