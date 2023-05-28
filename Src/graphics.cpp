@@ -70,3 +70,6 @@ void Graphics::update(float acceleration, led_array& leds) {
     x_1 = x;
 }
 
+float Graphics::getFrequency() const {
+    return angularFrequency / (2 * M_PI) * 200;
+}

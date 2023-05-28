@@ -22,8 +22,9 @@ public:
     void callback();
 private:
     uint8_t byte = 0;
-    volatile uint8_t uart_data[64] = {0};
-    volatile int uart_idx = 0;
+    volatile uint8_t uart_data[128] = {0};
+    int uart_idx = 0;
+    int uart_pos = 0;
     LockingData_t lock = LOCKING_DATA_INIT;
 };
 

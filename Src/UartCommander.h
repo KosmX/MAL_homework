@@ -10,14 +10,6 @@
 #include "ProtoThreadWrapper.h"
 #include "IDrawer.h"
 
-class UartCommand {
-public:
-    virtual void execute() = 0;
-};
-
-class SimpleCommand : UartCommand {
-
-};
 
 /**
  * Receive and process UART data

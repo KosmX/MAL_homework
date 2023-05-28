@@ -14,30 +14,28 @@ void AsyncUartReceiver::init() {
 }
 
 bool AsyncUartReceiver::isNotEmpty() const {
-    return uart_idx != 0;
+    return uart_idx != uart_pos;
 }
 
+// up-to 1 word (int) read/writes are atomic (source: ARM M4 docs)
 uint16_t AsyncUartReceiver::read() {
-    auto l = Stm32Lock(&lock); // destructor will release the lock :D
 
-    if (uart_idx == 0) return -1;
+    if (uart_idx == uart_pos) return -1;
 
-    auto r = uart_data[0];
-    uart_idx--;
-    for (int i = 0; i < uart_idx; i++) {
-        uart_data[i] = uart_data[i + 1];
-    }
+
+    auto r = uart_data[uart_pos++];
+    if (uart_pos >= 128) uart_pos = 0;
+
     return r;
 }
 
 void AsyncUartReceiver::callback() {
-    stm32_lock_acquire(&lock);
 
-    if (uart_idx < 64) {
-        uart_data[uart_idx++] = byte; // is locked
+    uart_data[uart_idx] = byte; // is locked
+    if (++uart_idx >= 128) {
+        uart_idx = 0;
     }
 
-    stm32_lock_release(&lock);
 
     HAL_UART_Receive_IT(&huart2, &AsyncUartInstance.byte, 1);
 }

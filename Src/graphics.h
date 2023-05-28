@@ -26,9 +26,12 @@ public:
     void update(float acceleration, led_array& leds);
 
     IDrawer* drawLogic = nullptr;
+
+    float getFrequency() const;
+
 private:
     /**
-     * angular frequency of the position (in ticks)
+     * angular frequency of the position (in 1/ticks)
      */
     float angularFrequency = 0;
     // assert angularFrequency < pi; //
