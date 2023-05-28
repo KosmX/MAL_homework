@@ -42,7 +42,7 @@ private:
     unsigned int tickSinceZero = 0;
 
     float getPhase() {
-        return tickSinceZero * angularFrequency;
+        return (tickSinceZero + 1) * angularFrequency;
     }
 
     // helper *static* stuff

@@ -5,10 +5,14 @@
 #include "Packets.h"
 #include "usart.h"
 
-void StringMsg::write() {
-    uint8_t c = 's';
-    HAL_UART_Transmit(&huart2, &c, 1, 100);
-    HAL_UART_Transmit(&huart2, reinterpret_cast<const uint8_t *>(str.c_str()), str.size() + 1, 1000);
+bool StringMsg::debug = false;
+
+void StringMsg::write(bool always) {
+    if (always || debug) {
+        uint8_t c = 's';
+        HAL_UART_Transmit(&huart2, &c, 1, 100);
+        HAL_UART_Transmit(&huart2, reinterpret_cast<const uint8_t *>(str.c_str()), str.size() + 1, 1000);
+    }
 }
 
 void FreqPacket::write() {

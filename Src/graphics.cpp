@@ -56,7 +56,7 @@ void Graphics::update(float acceleration, led_array& leds) {
         // here goes the fancy draw function+
 
         // position between 1 and 0 (top and bottom)
-        auto pos = (std::cos(getPhase()) + 1) / 2;
+        auto pos = (std::sin(getPhase()) + 1) / 2;
 
         drawLogic->setLEDs(pos, leds);
     }

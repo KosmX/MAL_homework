@@ -53,11 +53,14 @@ void UartCommander::readStream() {
         case 'f':
             FreqPacket(drawer.getFrequency()).write();
             break;
+        case 'l':
+            StringMsg::debug = !StringMsg::debug;
+            StringMsg(std::string{"Logging "} + (StringMsg::debug ? "enabled" : "disabled")).write(true);
         case 't':
-            StringMsg("pong").write();
+            StringMsg("pong").write(true);
             break;
         default:
-            StringMsg("error, unknown command: " + (std::to_string(nextCommand))).write();
+            StringMsg("error, unknown command: " + (std::to_string(nextCommand))).write(true);
     }
 }
 
@@ -78,11 +81,12 @@ void UartCommander::readProgram() {
 
         StringMsg("line " + std::to_string(i) + " position: " + std::to_string(data[i].first)).write();
         for(auto& led : data[i].second) {
-            led = next_byte();
+            led = LED{next_byte()};
         }
     }
     // this will be sent to another thread
     if (data_size > 0) {
+        StringMsg("program updated").write(true);
         sendStuff = new ProgrammedDrawer(std::move(data));
     }
 }

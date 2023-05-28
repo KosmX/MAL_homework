@@ -18,9 +18,12 @@ public:
 class StringMsg : UartPacket {
 public:
     StringMsg(const std::string& str) : str{str} {}
-    void write() override;
+    void write() override {write(false);};
+    void write(bool always);
+    static bool debug;
 private:
     const std::string& str;
+
 };
 
 class FreqPacket : UartPacket {
