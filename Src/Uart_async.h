@@ -11,6 +11,12 @@
 #include "Stm32Lock.h"
 
 
+/**
+ * Class implementing UART receiving using DMA ringbuffer mode.
+ * it makes no interrupt, and because the index read is atomic, it is safe
+ *
+ * The class is not thread-safe, reading from multiple threads may cause problems. Writing and reading is safe :D
+ */
 class AsyncUartReceiver {
 public:
 
@@ -20,10 +26,10 @@ public:
     uint16_t read();
 
     void callback();
+    const static int data_size = 128;
 private:
     uint8_t byte = 0;
-    volatile uint8_t uart_data[128] = {0};
-    int uart_idx = 0;
+    volatile uint8_t uart_data[data_size] = {0};
     int uart_pos = 0;
     LockingData_t lock = LOCKING_DATA_INIT;
 };
