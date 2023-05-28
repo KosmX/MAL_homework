@@ -71,5 +71,5 @@ void Graphics::update(float acceleration, led_array& leds) {
 }
 
 float Graphics::getFrequency() const {
-    return angularFrequency / (2 * M_PI) * 200;
+    return enabled ? angularFrequency / (2 * (float)M_PI) * 200 : NAN;
 }

@@ -19,9 +19,9 @@ void FreqPacket::write() {
     uint8_t data[5];
     data[0] = 'f';
     auto* fp = reinterpret_cast<uint32_t*>(&freq); // take it as int
-    data[2] = (*fp >> 0) & 0xff;
+    data[1] = (*fp >> 0) & 0xff;
     data[2] = (*fp >> 8) & 0xff;
-    data[2] = (*fp >> 16) & 0xff;
-    data[2] = (*fp >> 24) & 0xff;
+    data[3] = (*fp >> 16) & 0xff;
+    data[4] = (*fp >> 24) & 0xff;
     HAL_UART_Transmit(&huart2, data, 5, 1000);
 }
