@@ -45,7 +45,7 @@ void UartCommander::readStream() {
     char nextCommand = next_byte();
     switch (nextCommand) {
         case 'g':
-            StringMsg("Command parser operational :D\n").write();
+            StringMsg("Command parser operational :D\n").write(true);
             break;
         case 'p': // programming
             readProgram();
@@ -56,6 +56,7 @@ void UartCommander::readStream() {
         case 'l':
             StringMsg::debug = !StringMsg::debug;
             StringMsg(std::string{"Logging "} + (StringMsg::debug ? "enabled" : "disabled")).write(true);
+            break;
         case 't':
             StringMsg("pong").write(true);
             break;
